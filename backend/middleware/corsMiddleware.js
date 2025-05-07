@@ -2,12 +2,20 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-dotenv.config(); // load FRONTEND_URL from .env
+dotenv.config();
 
-const allowedOrigin = process.env.FRONTEND_URL || 'http://localhost:5173';
+const allowedOrigins = [
+  process.env.FRONTEND_URL || 'http://localhost:5174'// add this explicitly based on your current frontend
+];
 
 const corsMiddleware = cors({
-  origin: allowedOrigin,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,

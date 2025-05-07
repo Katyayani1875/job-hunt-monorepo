@@ -49,6 +49,7 @@ app.use('/api/ai', aiRoutes);               // AI-related routes
 
 app.use(corsMiddleware);
 
+
 // Error Handling Middleware (to catch unexpected errors)
 app.use(errorHandler);
 
