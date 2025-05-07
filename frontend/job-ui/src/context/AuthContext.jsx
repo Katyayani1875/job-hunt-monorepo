@@ -1,22 +1,20 @@
-// src/context/AuthContext.jsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/axios'; // ✅ use the custom axios instance
 
 const AuthContext = createContext();
-
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Load current user on app start
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get('/api/users/me');
+        const res = await api.get('/users/me'); // ✅ uses token & baseURL
         setUser(res.data);
       } catch (err) {
+        console.error('Fetch user error:', err);
         setUser(null);
       } finally {
         setLoading(false);
@@ -28,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post('/api/auth/logout');
+      await api.post('/auth/logout'); 
     } catch (err) {
       console.error('Logout failed:', err);
     } finally {
@@ -43,5 +41,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export default AuthProvider;
-
+export default AuthProvider;    

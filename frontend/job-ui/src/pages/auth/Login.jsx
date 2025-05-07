@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
-import axios from 'axios';
+import api from "../../utils/axios"; // ✅ use custom axios instance
 
 const Login = () => {
   const navigate = useNavigate();
@@ -21,19 +21,13 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/users/login`,
-        { email, password },
-        {
-          withCredentials: true, // Important to allow cookies from backend
-        }
-      );
+      const { data } = await api.post('/users/login', { email, password });
 
       const token = data?.token;
       if (token) {
-        localStorage.setItem('token', token);
+        localStorage.setItem('token', token); // ✅ Store token
         toast.success("Login successful");
-        navigate('/');
+        navigate('/home');
       } else {
         toast.error("Login failed: No token received");
       }
