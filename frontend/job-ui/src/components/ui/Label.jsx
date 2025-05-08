@@ -1,6 +1,6 @@
 // src/components/ui/Label.jsx
 import React from "react";
-import { cn } from "@/lib/utils"; // Make sure this utility exists
+import { cn } from "../../lib/utils";// Make sure this utility exists
 
 const Label = React.forwardRef(({ className, ...props }, ref) => (
   <label

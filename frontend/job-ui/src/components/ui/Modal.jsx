@@ -1,7 +1,8 @@
 import React from 'react';
 import { Dialog } from '@headlessui/react';
 import { X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from "../../lib/utils";
+
 
 const Modal = ({ isOpen, onClose, title, children, size = 'md' }) => {
   const sizes = {
