@@ -1,6 +1,6 @@
 const companies = [
   { name: "Google", logo: "/logos/google.png" },
-  { name: "Deloitte", logo: "/logos/deloitte.png" },
+  { name: "Tata", logo: "/logos/Tata.png" },
   { name: "Microsoft", logo: "/logos/microsoft.svg" },
   { name: "Amazon", logo: "/logos/amazon.jpg" },
 ];

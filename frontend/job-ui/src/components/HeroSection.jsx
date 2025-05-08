@@ -1,4 +1,4 @@
-// src/pages/Home.jsx
+// src/pages/HeroSection.jsx
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Search, MapPin, ChevronDown } from "lucide-react";

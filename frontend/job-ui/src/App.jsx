@@ -19,6 +19,9 @@ import RecommendJobs from './pages/ai/RecommendJobs';
 import ChatAssistant from './pages/ai/ChatAssistant';
 import CompanyProfile from './pages/company/CompanyProfile';
 import NotFound from './pages/NotFound';
+import ProfilePage from "./pages/ProfilePage";
+
+
 
 function App() {
   return (
@@ -44,6 +47,8 @@ function App() {
             <Route path="/ai/chat" element={<ChatAssistant />} />
             <Route path="/company/profile" element={<CompanyProfile />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/candidate-profile" element={<ProfilePage userType="candidate" />} />
+            <Route path="/employer-profile" element={<ProfilePage userType="employer" />} />
           </Routes>
         </main>
         <Footer />

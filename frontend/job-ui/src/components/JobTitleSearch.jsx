@@ -10,7 +10,7 @@ export default function JobTitleSearch({ onSelect }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef();
 
-  // Debounced fetch
+  // Debounced fetch 
   const fetchSuggestions = debounce(async (searchText) => {
     if (!searchText.trim()) {
       setSuggestions([]);
@@ -18,8 +18,8 @@ export default function JobTitleSearch({ onSelect }) {
     }
 
     try {
-      const res = await axios.get(`/api/jobs/search?q=${searchText}`);
-      setSuggestions(res.data.jobs || []); // expecting jobs: [{ title }]
+      const res = await axios.get(`/api/jobs/search/suggestions?query=${searchText}`);
+      setSuggestions(res.data.suggestions || []); 
     } catch (err) {
       console.error("Error fetching job title suggestions:", err);
       setSuggestions([]);
@@ -67,13 +67,13 @@ export default function JobTitleSearch({ onSelect }) {
 
       {showDropdown && suggestions.length > 0 && (
         <ul className="absolute z-20 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-          {suggestions.map((job, i) => (
+          {suggestions.map((title, i) => (
             <li
               key={i}
-              onClick={() => handleSelect(job.title)}
+              onClick={() => handleSelect(title)}
               className="px-4 py-2 text-sm text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
             >
-              {job.title}
+              {title}
             </li>
           ))}
         </ul>
