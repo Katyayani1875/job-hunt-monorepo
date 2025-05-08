@@ -1,13 +1,10 @@
-// ✅ This is a production-ready React + Tailwind + shadcn/ui profile page (Candidate & Employer combined)
-// ✅ It includes Profile Completion Indicator and placeholders to integrate AI (Resume Analysis, Job Recommendations etc.)
-// ✅ You can split CandidateProfile and EmployerProfile components later as needed
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from "../components/ui/card"; 
+import { Button } from '../components/ui/Button';
+import { Progress } from '../components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { Badge } from '../components/ui/badge';
 import axios from 'axios';
 
 export default function ProfilePage({ userType }) {
