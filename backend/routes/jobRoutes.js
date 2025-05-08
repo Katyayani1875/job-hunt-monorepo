@@ -34,7 +34,7 @@ router.get('/', getJobs);
  * @desc    Get job title suggestions for autocomplete
  * @access  Public
  */
-router.get('/search', searchJobTitles);
+router.get('/search/suggestions', searchJobTitles);
 
 /**
  * @route   GET /api/jobs/:id
