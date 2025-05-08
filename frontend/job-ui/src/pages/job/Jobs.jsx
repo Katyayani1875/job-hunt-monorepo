@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button.jsx";
+import { Button } from "@/components/ui/button";
 import { BriefcaseIcon, MapPinIcon, SearchIcon } from "lucide-react";
 import axios from "axios";
 
