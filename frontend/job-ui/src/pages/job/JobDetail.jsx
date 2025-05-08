@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button.jsx';
 import { BookmarkIcon, BriefcaseIcon, MapPinIcon } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
