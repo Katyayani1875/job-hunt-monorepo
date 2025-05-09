@@ -13,11 +13,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { motion } from "framer-motion";
 import axios from "axios";
 
-// Lucide Icons
+// Lucide Icons (✅ Fixed icons)
 import {
   UserCircle,
   BrainCircuit,
-  LightningBolt,
+  Zap,
   CheckCircle,
   Edit,
 } from "lucide-react";
@@ -64,10 +64,11 @@ export default function ProfilePage({ userType }) {
         <TabsList className="grid w-full grid-cols-3 bg-gray-100 rounded-xl shadow-inner">
           <TabButton value="overview" label="Overview" icon={<UserCircle className="h-4 w-4 mr-1" />} activeTab={activeTab} />
           <TabButton value="ai" label="AI Insights" icon={<BrainCircuit className="h-4 w-4 mr-1" />} activeTab={activeTab} />
-          <TabButton value="actions" label="Quick Actions" icon={<LightningBolt className="h-4 w-4 mr-1" />} activeTab={activeTab} />
+          {/* 🔥 FIXED: Using Zap (lightning icon) */}
+          <TabButton value="actions" label="Quick Actions" icon={<Zap className="h-4 w-4 mr-1" />} activeTab={activeTab} />
         </TabsList>
 
-        {/* Candidate Profile — Enhanced UI */}
+        {/* Candidate Profile UI */}
         {userType === "candidate" ? (
           <>
             <TabsContent value="overview">
@@ -131,7 +132,7 @@ export default function ProfilePage({ userType }) {
             </TabsContent>
           </>
         ) : (
-          // Employer UI stays same (your original)
+          // Employer UI
           <>
             <TabsContent value="overview">
               <Card className="bg-white/60 backdrop-blur-xl rounded-2xl shadow-lg">
@@ -192,7 +193,7 @@ export default function ProfilePage({ userType }) {
   );
 }
 
-// --------- Enhanced Components ---------
+// --------- Components ---------
 function CandidateProfileHeader({ name, title, completion }) {
   return (
     <Card className="shadow-md rounded-2xl p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 via-white to-blue-50">
