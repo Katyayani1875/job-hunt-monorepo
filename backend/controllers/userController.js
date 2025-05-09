@@ -77,3 +77,26 @@ export const deleteUserAccount = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+export const getProfileCompletion = async (req, res) => {
+  try {
+    const user = req.user; 
+
+   
+    let filledFields = 0;
+    const totalFields = 5; 
+
+    if (user.name) filledFields++;
+    if (user.email) filledFields++;
+    if (user.phone) filledFields++;
+    if (user.location) filledFields++;
+    if (user.bio) filledFields++;
+
+    const percentage = Math.round((filledFields / totalFields) * 100);
+
+    res.json({ percentage });
+  } catch (error) {
+    res.status(500).json({ message: "Error calculating profile completion" });
+  }
+};
