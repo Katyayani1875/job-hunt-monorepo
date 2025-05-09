@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/ui/button";
 import { BriefcaseIcon, MapPinIcon, SearchIcon } from "lucide-react";
 import axios from "axios";
 
@@ -42,7 +41,12 @@ const Jobs = () => {
             icon={<SearchIcon />}
           />
         </div>
-        <Button onClick={fetchJobs}>Refresh</Button>
+        <button
+          onClick={fetchJobs}
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+        >
+          Refresh
+        </button>
       </div>
 
       {/* Job listings */}
@@ -71,9 +75,9 @@ const Jobs = () => {
                   {job.description}
                 </p>
                 <div className="mt-4">
-                  <Button size="sm" variant="secondary">
+                  <button className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition duration-200">
                     View Details
-                  </Button>
+                  </button>
                 </div>
               </div>
             </Link>

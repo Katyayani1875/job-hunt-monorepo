@@ -47,8 +47,8 @@ function App() {
             <Route path="/ai/chat" element={<ChatAssistant />} />
             <Route path="/company/profile" element={<CompanyProfile />} />
             <Route path="*" element={<NotFound />} />
-            <Route path="/candidate-profile" element={<ProfilePage userType="candidate" />} />
-            <Route path="/employer-profile" element={<ProfilePage userType="employer" />} />
+            <Route path="/profile" element={<ProfilePage userType="candidate"/>} />
+            <Route path="/profile" element={<ProfilePage userType="employer" />} />
           </Routes>
         </main>
         <Footer />
