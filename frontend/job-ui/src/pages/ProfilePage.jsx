@@ -2,19 +2,11 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { Progress } from "../components/ui/progress";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { Input } from "../components/ui/input";
 import { motion } from "framer-motion";
-import axios from "axios";
-
-// Lucide Icons
+import { Progress } from "../components/ui/progress";
 import {
   UserCircle,
   BrainCircuit,
@@ -22,46 +14,60 @@ import {
   CheckCircle,
   Edit,
   Camera,
-  LogIn,
-  UserPlus,
 } from "lucide-react";
 
-// Create a reusable axios instance
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-});
+// 🟢 Import ALL AI routes from api/aiApi.js
+import {
+  analyzeResume,
+  recommendJobs,
+  generateCoverLetter,
+  smartJobPost,
+  chatAssistant,
+} from "../api/aiApi";
 
 export default function ProfilePage({ userType, isLoggedIn, userName }) {
-  const [profileCompletion, setProfileCompletion] = useState(0);
   const [activeTab, setActiveTab] = useState("overview");
   const [aiInsights, setAiInsights] = useState({
     resumeScore: null,
     jobMatches: [],
   });
   const [avatarImage, setAvatarImage] = useState("https://i.pravatar.cc/150?img=5");
+  const [resumeText, setResumeText] = useState("");
+  const [skillsInput, setSkillsInput] = useState("");
+  const [isAnalyzingResume, setIsAnalyzingResume] = useState(false);
+  const [isRecommendingJobs, setIsRecommendingJobs] = useState(false);
+  const [authToken, setAuthToken] = useState(localStorage.getItem('authToken') || '');
 
   useEffect(() => {
-    api
-      .get(`/profile/completion?type=${userType}`)
-      .then((res) => setProfileCompletion(res.data.percentage))
-      .catch(() => setProfileCompletion(0));
-  }, [userType]);
+    // Optionally re-validate token here if needed
+  }, [authToken, isLoggedIn]);
 
   const handleAnalyzeResume = async () => {
-    const response = await api.post("/ai/analyze-resume", {
-      text: "sample resume text",
-    });
-    setAiInsights((prev) => ({ ...prev, resumeScore: response.data.analysis }));
+    if (!resumeText.trim()) return alert("Please paste your resume text.");
+    setIsAnalyzingResume(true);
+    try {
+      const response = await analyzeResume({ resume: resumeText });
+      setAiInsights((prev) => ({ ...prev, resumeScore: response.data }));
+    } catch (error) {
+      console.error("Analyze Resume Error:", error);
+      alert("Failed to analyze resume.");
+    } finally {
+      setIsAnalyzingResume(false);
+    }
   };
 
   const handleRecommendJobs = async () => {
-    const response = await api.post("/ai/recommend-jobs", {
-      skills: "React, Node.js",
-    });
-    setAiInsights((prev) => ({
-      ...prev,
-      jobMatches: response.data.recommendations,
-    }));
+    if (!skillsInput.trim()) return alert("Please enter your skills.");
+    setIsRecommendingJobs(true);
+    try {
+      const response = await recommendJobs({ skills: skillsInput.split(",").map(s => s.trim()) });
+      setAiInsights((prev) => ({ ...prev, jobMatches: response.data.recommendations || [] }));
+    } catch (error) {
+      console.error("Recommend Jobs Error:", error);
+      alert("Failed to recommend jobs.");
+    } finally {
+      setIsRecommendingJobs(false);
+    }
   };
 
   const handleAvatarChange = (e) => {
@@ -81,22 +87,13 @@ export default function ProfilePage({ userType, isLoggedIn, userName }) {
         {userType === "candidate" ? "Candidate Profile" : "Employer Profile"}
       </h1>
 
-      {/* Greeting Message */}
       <div className="p-4 bg-blue-50 rounded-xl flex items-center justify-between shadow-inner">
         {isLoggedIn ? (
           <h2 className="text-lg text-gray-700 font-medium">
             Hi <span className="font-bold text-blue-600">{userName}</span>!
           </h2>
         ) : (
-          <div className="flex items-center gap-3">
-            <h2 className="text-lg text-gray-700 font-medium">Welcome! Please</h2>
-            <Button variant="outline" size="sm">
-              <LogIn className="h-4 w-4 mr-1" /> Login
-            </Button>
-            <Button variant="outline" size="sm">
-              <UserPlus className="h-4 w-4 mr-1" /> Register
-            </Button>
-          </div>
+          <h2 className="text-lg text-gray-700 font-medium">Welcome!</h2>
         )}
       </div>
 
@@ -107,13 +104,12 @@ export default function ProfilePage({ userType, isLoggedIn, userName }) {
           <TabButton value="actions" label="Quick Actions" icon={<Zap className="h-4 w-4 mr-1" />} activeTab={activeTab} />
         </TabsList>
 
-        {/* Overview Tab */}
         <TabsContent value="overview">
           <div className="space-y-4">
             <CandidateProfileHeader
               name={userName}
               title={userType === "candidate" ? "Frontend Developer" : "Employer Representative"}
-              completion={profileCompletion}
+              completion={0}
               avatarImage={avatarImage}
               handleAvatarChange={handleAvatarChange}
             />
@@ -127,34 +123,61 @@ export default function ProfilePage({ userType, isLoggedIn, userName }) {
           </div>
         </TabsContent>
 
-        {/* AI Insights Tab */}
         <TabsContent value="ai">
           <Card className="bg-white/60 backdrop-blur-xl rounded-2xl shadow-lg">
             <CardContent className="p-6 space-y-4">
               <h3 className="text-lg font-bold text-gray-700">AI Powered Insights</h3>
-              <div className="flex gap-3 flex-wrap">
-                <Button onClick={handleAnalyzeResume}>Analyze Resume</Button>
-                <Button onClick={handleRecommendJobs} variant="secondary">
-                  Recommend Jobs
+
+              <div className="mb-4">
+                <label htmlFor="resumeText" className="block text-gray-700 text-sm font-bold mb-2">
+                  Paste Your Resume:
+                </label>
+                <textarea
+                  id="resumeText"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  rows="5"
+                  value={resumeText}
+                  onChange={(e) => setResumeText(e.target.value)}
+                />
+                <Button onClick={handleAnalyzeResume} className="mt-2" disabled={isAnalyzingResume}>
+                  {isAnalyzingResume ? "Analyzing..." : "Analyze Resume"}
                 </Button>
+                {aiInsights.resumeScore && (
+                  <div className="mt-2 text-gray-700">
+                    <strong>Resume Analysis:</strong> {JSON.stringify(aiInsights.resumeScore)}
+                  </div>
+                )}
               </div>
-              <div className="text-gray-700 mt-4">
-                <p>
-                  <strong>Resume Analysis:</strong>{" "}
-                  {aiInsights.resumeScore ? JSON.stringify(aiInsights.resumeScore) : "Not yet analyzed."}
-                </p>
-                <p className="mt-2 font-semibold">Job Recommendations:</p>
-                <ul className="list-disc list-inside">
-                  {aiInsights.jobMatches.map((job, index) => (
-                    <li key={index}>{job}</li>
-                  ))}
-                </ul>
+
+              <div>
+                <label htmlFor="skillsInput" className="block text-gray-700 text-sm font-bold mb-2">
+                  Enter Your Skills (comma-separated):
+                </label>
+                <Input
+                  type="text"
+                  id="skillsInput"
+                  placeholder="e.g., React, Node.js, Communication"
+                  value={skillsInput}
+                  onChange={(e) => setSkillsInput(e.target.value)}
+                />
+                <Button onClick={handleRecommendJobs} variant="secondary" className="mt-2" disabled={isRecommendingJobs}>
+                  {isRecommendingJobs ? "Recommending..." : "Recommend Jobs"}
+                </Button>
+                {aiInsights.jobMatches.length > 0 && (
+                  <div className="mt-2 text-gray-700">
+                    <p className="font-semibold">Job Recommendations:</p>
+                    <ul className="list-disc list-inside">
+                      {aiInsights.jobMatches.map((job, index) => (
+                        <li key={index}>{job}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        {/* Quick Actions Tab */}
         <TabsContent value="actions">
           <Card className="bg-white/60 backdrop-blur-xl rounded-2xl shadow-lg">
             <CardContent className="p-6 space-y-4">
@@ -182,8 +205,7 @@ export default function ProfilePage({ userType, isLoggedIn, userName }) {
   );
 }
 
-// ---------- Enhanced Components ----------
-
+// Reusable components
 function CandidateProfileHeader({ name, title, completion, avatarImage, handleAvatarChange }) {
   return (
     <Card className="shadow-md rounded-2xl p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 via-white to-blue-50">

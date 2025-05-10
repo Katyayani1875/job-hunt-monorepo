@@ -1,22 +1,13 @@
-import * as React from "react"
-import * as ProgressPrimitive from "@radix-ui/react-progress"
+// progress.jsx
+import React from 'react';
 
-import { cn } from "../../lib/utils";
+function Progress({ value, className }) {
+  // ... your progress bar implementation ...
+  return (
+    <div className={className} style={{ width: `${value}%`, backgroundColor: 'blue' }}>
+      {/* ... other elements ... */}
+    </div>
+  );
+}
 
-
-const Progress = React.forwardRef(({ className, value, ...props }, ref) => (
-  <ProgressPrimitive.Root
-    ref={ref}
-    className={cn(
-      "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
-      className
-    )}
-    {...props}>
-    <ProgressPrimitive.Indicator
-      className="h-full w-full flex-1 bg-primary transition-all"
-      style={{ transform: `translateX(-${100 - (value || 0)}%)` }} />
-  </ProgressPrimitive.Root>
-))
-Progress.displayName = ProgressPrimitive.Root.displayName
-
-export { Progress }
+export { Progress }; // Or export default Progress;

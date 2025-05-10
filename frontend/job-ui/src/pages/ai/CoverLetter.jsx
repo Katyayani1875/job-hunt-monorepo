@@ -1,112 +1,55 @@
-import { useState } from "react";
-import axios from "axios";
-import { Textarea } from "@/components/ui/Textarea";
-import { Button } from "@/components/ui/button";
-import { Loader, FileTextIcon } from "lucide-react";
-import toast from "react-hot-toast";
+import { useState } from 'react';
+import { generateCoverLetter } from '../../api/aiApi';
 
-const CoverLetter = () => {
-  const [formData, setFormData] = useState({
-    jobTitle: "",
-    companyName: "",
-    userSkills: "",
-  });
-
-  const [generating, setGenerating] = useState(false);
-  const [generatedLetter, setGeneratedLetter] = useState("");
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+const GenerateCoverLetter = () => {
+  const [jobTitle, setJobTitle] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [resumeHighlights, setResumeHighlights] = useState('');
+  const [result, setResult] = useState('');
 
   const handleGenerate = async () => {
-    if (!formData.jobTitle || !formData.companyName || !formData.userSkills) {
-      return toast.error("Please fill in all fields");
-    }
-
-    setGenerating(true);
-    setGeneratedLetter("");
-
-    const prompt = `
-      Write a professional and personalized cover letter for a position as a "${formData.jobTitle}" at "${formData.companyName}". 
-      The candidate has the following skills and experience: ${formData.userSkills}.
-    `;
-
     try {
-      const res = await axios.post("/api/ai/cover-letter", { prompt });
-      setGeneratedLetter(
-        res.data.coverLetter || res.data || "No response from AI."
-      );
+      const response = await generateCoverLetter(jobTitle, companyName, resumeHighlights);
+      setResult(response.data.coverLetter);
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to generate cover letter.");
-    } finally {
-      setGenerating(false);
+      alert(err.response?.data?.message || 'Error generating cover letter');
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
-        <FileTextIcon className="w-6 h-6 text-blue-600" />
-        AI Cover Letter Generator
-      </h1>
+    <div>
+      <h2>Cover Letter Generator</h2>
+      <input
+        type="text"
+        value={jobTitle}
+        onChange={(e) => setJobTitle(e.target.value)}
+        placeholder="Job Title"
+        size="50"
+      /><br /><br />
+      <input
+        type="text"
+        value={companyName}
+        onChange={(e) => setCompanyName(e.target.value)}
+        placeholder="Company Name"
+        size="50"
+      /><br /><br />
+      <textarea
+        value={resumeHighlights}
+        onChange={(e) => setResumeHighlights(e.target.value)}
+        rows={5}
+        cols={50}
+        placeholder="Briefly describe your experience/achievements"
+      /><br />
+      <button onClick={handleGenerate}>Generate Cover Letter</button>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <input
-            type="text"
-            name="jobTitle"
-            placeholder="Job Title (e.g., Frontend Developer)"
-            value={formData.jobTitle}
-            onChange={handleChange}
-            className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:text-white"
-          />
-          <input
-            type="text"
-            name="companyName"
-            placeholder="Company Name (e.g., Google)"
-            value={formData.companyName}
-            onChange={handleChange}
-            className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:text-white"
-          />
-          <Textarea
-            name="userSkills"
-            placeholder="Your skills, experiences, or achievements..."
-            value={formData.userSkills}
-            onChange={handleChange}
-            className="h-40"
-          />
-
-          <Button
-            onClick={handleGenerate}
-            disabled={generating}
-            className="w-full"
-          >
-            {generating ? (
-              <span className="flex items-center gap-2">
-                <Loader className="animate-spin w-4 h-4" />
-                Generating...
-              </span>
-            ) : (
-              "Generate Cover Letter"
-            )}
-          </Button>
-        </div>
-
+      {result && (
         <div>
-          <h2 className="text-lg font-semibold mb-2 text-gray-800 dark:text-white">
-            Generated Cover Letter:
-          </h2>
-          <div className="p-4 border rounded-lg bg-white dark:bg-gray-900 dark:text-gray-100 min-h-[300px] whitespace-pre-wrap">
-            {generating
-              ? "Generating your cover letter..."
-              : generatedLetter || "Your cover letter will appear here."}
-          </div>
+          <h3>Generated Cover Letter:</h3>
+          <pre>{result}</pre>
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
-export default CoverLetter;
+export default GenerateCoverLetter;
