@@ -81,9 +81,12 @@ export const deleteUserAccount = async (req, res) => {
 
 export const getProfileCompletion = async (req, res) => {
   try {
-    const user = req.user; 
+    const user = await User.findById(req.user.id); 
 
-   
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
     let filledFields = 0;
     const totalFields = 5; 
 
@@ -97,6 +100,7 @@ export const getProfileCompletion = async (req, res) => {
 
     res.json({ percentage });
   } catch (error) {
+    console.error(error);  
     res.status(500).json({ message: "Error calculating profile completion" });
   }
 };
