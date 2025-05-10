@@ -5,8 +5,7 @@ import {
   loginUser, 
   getUserProfile, 
   updateUserProfile, 
-  deleteUserAccount, 
-  getProfileCompletion 
+  deleteUserAccount
 } from '../controllers/userController.js';
 
 import { verifyUser } from '../middleware/authMiddleware.js';
@@ -18,6 +17,6 @@ router.post('/login', loginUser);
 router.get('/me', verifyUser, getUserProfile);
 router.put('/me', verifyUser, updateUserProfile);
 router.delete('/me', verifyUser, deleteUserAccount);
-router.get('/profile/completion', verifyUser, getProfileCompletion);
+// router.get('/profile/completion', verifyUser, getProfileCompletion);
 
 export default router;

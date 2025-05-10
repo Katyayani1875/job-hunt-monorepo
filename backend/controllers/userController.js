@@ -79,28 +79,28 @@ export const deleteUserAccount = async (req, res) => {
 };
 
 
-export const getProfileCompletion = async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id); 
+// export const getProfileCompletion = async (req, res) => {
+//   try {
+//     const user = await User.findById(req.user.id); 
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found.' });
+//     }
 
-    let filledFields = 0;
-    const totalFields = 5; 
+//     let filledFields = 0;
+//     const totalFields = 5; 
 
-    if (user.name) filledFields++;
-    if (user.email) filledFields++;
-    if (user.phone) filledFields++;
-    if (user.location) filledFields++;
-    if (user.bio) filledFields++;
+//     if (user.name) filledFields++;
+//     if (user.email) filledFields++;
+//     if (user.phone) filledFields++;
+//     if (user.location) filledFields++;
+//     if (user.bio) filledFields++;
 
-    const percentage = Math.round((filledFields / totalFields) * 100);
+//     const percentage = Math.round((filledFields / totalFields) * 100);
 
-    res.json({ percentage });
-  } catch (error) {
-    console.error(error);  
-    res.status(500).json({ message: "Error calculating profile completion" });
-  }
-};
+//     res.json({ percentage });
+//   } catch (error) {
+//     console.error(error);  
+//     res.status(500).json({ message: "Error calculating profile completion" });
+//   }
+// };

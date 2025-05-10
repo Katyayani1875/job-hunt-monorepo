@@ -5,9 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL || 'http://localhost:5174',
-  'http://localhost:5174',
-  'http://localhost:3000',  // <-- ADD THIS TOO for safety
+  process.env.FRONTEND_URL || 'http://localhost:5174','http://localhost:5173'
 ];
 
 const corsMiddleware = cors({

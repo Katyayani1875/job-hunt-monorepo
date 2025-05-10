@@ -16,6 +16,7 @@ import resumeRoutes from './routes/resumeRoutes.js';
 import applicationRoutes from './routes/applicationRoutes.js';
 import bookmarkRoutes from './routes/bookmarkRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
+import profileRoutes from './routes/profileRoutes.js';
 
 // Import error handler
 import errorHandler from './middleware/errorHandler.js';
@@ -45,6 +46,7 @@ app.use('/api/applications', applicationRoutes);  // Application-related routes
 app.use('/api/bookmarks', bookmarkRoutes);   // Bookmark-related routes
 app.use('/api/categories', categoryRoutes);  // Category-related routes
 app.use('/api/ai', aiRoutes);               // AI-related routes
+app.use('/api/profile', profileRoutes);
 
 
 app.use(corsMiddleware);
