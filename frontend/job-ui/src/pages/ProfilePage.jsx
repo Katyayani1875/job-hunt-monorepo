@@ -28,7 +28,7 @@ import {
 
 // Create a reusable axios instance
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 export default function ProfilePage({ userType, isLoggedIn, userName }) {
